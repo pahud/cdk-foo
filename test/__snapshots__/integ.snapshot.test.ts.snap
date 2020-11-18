@@ -1,0 +1,643 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`integ snapshot validation 1`] = `
+Object {
+  "Outputs": Object {
+    "EndpointURI": Object {
+      "Value": Object {
+        "Fn::Join": Array [
+          "",
+          Array [
+            "http://",
+            Object {
+              "Fn::GetAtt": Array [
+                "MyFooServiceLBBC8690AF",
+                "DNSName",
+              ],
+            },
+          ],
+        ],
+      },
+    },
+    "MyFooServiceLoadBalancerDNSF7793275": Object {
+      "Value": Object {
+        "Fn::GetAtt": Array [
+          "MyFooServiceLBBC8690AF",
+          "DNSName",
+        ],
+      },
+    },
+    "MyFooServiceServiceURL57660F73": Object {
+      "Value": Object {
+        "Fn::Join": Array [
+          "",
+          Array [
+            "http://",
+            Object {
+              "Fn::GetAtt": Array [
+                "MyFooServiceLBBC8690AF",
+                "DNSName",
+              ],
+            },
+          ],
+        ],
+      },
+    },
+  },
+  "Resources": Object {
+    "MyFooCluster3DFA1B2C": Object {
+      "Type": "AWS::ECS::Cluster",
+    },
+    "MyFooService049A0596": Object {
+      "DependsOn": Array [
+        "MyFooServiceLBPublicListenerECSGroup97CE7AF4",
+        "MyFooServiceLBPublicListener41B44F2E",
+      ],
+      "Properties": Object {
+        "Cluster": Object {
+          "Ref": "MyFooCluster3DFA1B2C",
+        },
+        "DeploymentConfiguration": Object {
+          "MaximumPercent": 200,
+          "MinimumHealthyPercent": 50,
+        },
+        "DesiredCount": 1,
+        "EnableECSManagedTags": false,
+        "HealthCheckGracePeriodSeconds": 60,
+        "LaunchType": "FARGATE",
+        "LoadBalancers": Array [
+          Object {
+            "ContainerName": "Flask",
+            "ContainerPort": 80,
+            "TargetGroupArn": Object {
+              "Ref": "MyFooServiceLBPublicListenerECSGroup97CE7AF4",
+            },
+          },
+        ],
+        "NetworkConfiguration": Object {
+          "AwsvpcConfiguration": Object {
+            "AssignPublicIp": "DISABLED",
+            "SecurityGroups": Array [
+              Object {
+                "Fn::GetAtt": Array [
+                  "MyFooServiceSecurityGroup9B9D68A3",
+                  "GroupId",
+                ],
+              },
+            ],
+            "Subnets": Array [
+              Object {
+                "Ref": "MyFooVpcPrivateSubnet1SubnetA5926094",
+              },
+              Object {
+                "Ref": "MyFooVpcPrivateSubnet2Subnet55FF780A",
+              },
+            ],
+          },
+        },
+        "TaskDefinition": Object {
+          "Ref": "MyFooTask3473F596",
+        },
+      },
+      "Type": "AWS::ECS::Service",
+    },
+    "MyFooServiceLBBC8690AF": Object {
+      "DependsOn": Array [
+        "MyFooVpcPublicSubnet1DefaultRouteFE326244",
+        "MyFooVpcPublicSubnet2DefaultRoute6747191B",
+      ],
+      "Properties": Object {
+        "LoadBalancerAttributes": Array [
+          Object {
+            "Key": "deletion_protection.enabled",
+            "Value": "false",
+          },
+        ],
+        "Scheme": "internet-facing",
+        "SecurityGroups": Array [
+          Object {
+            "Fn::GetAtt": Array [
+              "MyFooServiceLBSecurityGroup4B0B4AD1",
+              "GroupId",
+            ],
+          },
+        ],
+        "Subnets": Array [
+          Object {
+            "Ref": "MyFooVpcPublicSubnet1Subnet5749AF94",
+          },
+          Object {
+            "Ref": "MyFooVpcPublicSubnet2Subnet482188D3",
+          },
+        ],
+        "Type": "application",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+    },
+    "MyFooServiceLBPublicListener41B44F2E": Object {
+      "Properties": Object {
+        "DefaultActions": Array [
+          Object {
+            "TargetGroupArn": Object {
+              "Ref": "MyFooServiceLBPublicListenerECSGroup97CE7AF4",
+            },
+            "Type": "forward",
+          },
+        ],
+        "LoadBalancerArn": Object {
+          "Ref": "MyFooServiceLBBC8690AF",
+        },
+        "Port": 80,
+        "Protocol": "HTTP",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+    },
+    "MyFooServiceLBPublicListenerECSGroup97CE7AF4": Object {
+      "Properties": Object {
+        "Port": 80,
+        "Protocol": "HTTP",
+        "TargetType": "ip",
+        "VpcId": Object {
+          "Ref": "MyFooVpc546BB456",
+        },
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+    },
+    "MyFooServiceLBSecurityGroup4B0B4AD1": Object {
+      "Properties": Object {
+        "GroupDescription": "Automatically created Security Group for ELB mydemostackMyFooServiceLB7FADFC2C",
+        "SecurityGroupIngress": Array [
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow from anyone on port 80",
+            "FromPort": 80,
+            "IpProtocol": "tcp",
+            "ToPort": 80,
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "MyFooVpc546BB456",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "MyFooServiceLBSecurityGrouptomydemostackMyFooServiceSecurityGroupCF3C1DD58018EE91AC": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "DestinationSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "MyFooServiceSecurityGroup9B9D68A3",
+            "GroupId",
+          ],
+        },
+        "FromPort": 80,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "MyFooServiceLBSecurityGroup4B0B4AD1",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 80,
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress",
+    },
+    "MyFooServiceSecurityGroup9B9D68A3": Object {
+      "Properties": Object {
+        "GroupDescription": "my-demo-stack/MyFoo/Service/Service/SecurityGroup",
+        "SecurityGroupEgress": Array [
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "MyFooVpc546BB456",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "MyFooServiceSecurityGroupfrommydemostackMyFooServiceLBSecurityGroupA450C3EB80BF44874E": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "FromPort": 80,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "MyFooServiceSecurityGroup9B9D68A3",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "MyFooServiceLBSecurityGroup4B0B4AD1",
+            "GroupId",
+          ],
+        },
+        "ToPort": 80,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "MyFooTask3473F596": Object {
+      "Properties": Object {
+        "ContainerDefinitions": Array [
+          Object {
+            "Essential": true,
+            "Image": "pahud/flask-docker-sample:latest",
+            "Name": "Flask",
+            "PortMappings": Array [
+              Object {
+                "ContainerPort": 80,
+                "Protocol": "tcp",
+              },
+            ],
+          },
+        ],
+        "Cpu": "256",
+        "Family": "mydemostackMyFooTaskD621434B",
+        "Memory": "512",
+        "NetworkMode": "awsvpc",
+        "RequiresCompatibilities": Array [
+          "FARGATE",
+        ],
+        "TaskRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "MyFooTaskTaskRoleF6955435",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ECS::TaskDefinition",
+    },
+    "MyFooTaskTaskRoleF6955435": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "MyFooVpc546BB456": Object {
+      "Properties": Object {
+        "CidrBlock": "10.0.0.0/16",
+        "EnableDnsHostnames": true,
+        "EnableDnsSupport": true,
+        "InstanceTenancy": "default",
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "my-demo-stack/MyFoo/Vpc",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::VPC",
+    },
+    "MyFooVpcIGW155BEA24": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "my-demo-stack/MyFoo/Vpc",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::InternetGateway",
+    },
+    "MyFooVpcPrivateSubnet1DefaultRouteEEDA3798": Object {
+      "Properties": Object {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": Object {
+          "Ref": "MyFooVpcPublicSubnet1NATGateway4BF6B7A0",
+        },
+        "RouteTableId": Object {
+          "Ref": "MyFooVpcPrivateSubnet1RouteTableF4CAB834",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "MyFooVpcPrivateSubnet1RouteTableAssociation0870CFE5": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "MyFooVpcPrivateSubnet1RouteTableF4CAB834",
+        },
+        "SubnetId": Object {
+          "Ref": "MyFooVpcPrivateSubnet1SubnetA5926094",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "MyFooVpcPrivateSubnet1RouteTableF4CAB834": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "my-demo-stack/MyFoo/Vpc/PrivateSubnet1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "MyFooVpc546BB456",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "MyFooVpcPrivateSubnet1SubnetA5926094": Object {
+      "Properties": Object {
+        "AvailabilityZone": Object {
+          "Fn::Select": Array [
+            0,
+            Object {
+              "Fn::GetAZs": "",
+            },
+          ],
+        },
+        "CidrBlock": "10.0.128.0/18",
+        "MapPublicIpOnLaunch": false,
+        "Tags": Array [
+          Object {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Private",
+          },
+          Object {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private",
+          },
+          Object {
+            "Key": "Name",
+            "Value": "my-demo-stack/MyFoo/Vpc/PrivateSubnet1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "MyFooVpc546BB456",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "MyFooVpcPrivateSubnet2DefaultRoute93C286C4": Object {
+      "Properties": Object {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": Object {
+          "Ref": "MyFooVpcPublicSubnet1NATGateway4BF6B7A0",
+        },
+        "RouteTableId": Object {
+          "Ref": "MyFooVpcPrivateSubnet2RouteTable541D84AB",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "MyFooVpcPrivateSubnet2RouteTable541D84AB": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "my-demo-stack/MyFoo/Vpc/PrivateSubnet2",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "MyFooVpc546BB456",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "MyFooVpcPrivateSubnet2RouteTableAssociationB7728020": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "MyFooVpcPrivateSubnet2RouteTable541D84AB",
+        },
+        "SubnetId": Object {
+          "Ref": "MyFooVpcPrivateSubnet2Subnet55FF780A",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "MyFooVpcPrivateSubnet2Subnet55FF780A": Object {
+      "Properties": Object {
+        "AvailabilityZone": Object {
+          "Fn::Select": Array [
+            1,
+            Object {
+              "Fn::GetAZs": "",
+            },
+          ],
+        },
+        "CidrBlock": "10.0.192.0/18",
+        "MapPublicIpOnLaunch": false,
+        "Tags": Array [
+          Object {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Private",
+          },
+          Object {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private",
+          },
+          Object {
+            "Key": "Name",
+            "Value": "my-demo-stack/MyFoo/Vpc/PrivateSubnet2",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "MyFooVpc546BB456",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "MyFooVpcPublicSubnet1DefaultRouteFE326244": Object {
+      "DependsOn": Array [
+        "MyFooVpcVPCGWBD2368E6",
+      ],
+      "Properties": Object {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": Object {
+          "Ref": "MyFooVpcIGW155BEA24",
+        },
+        "RouteTableId": Object {
+          "Ref": "MyFooVpcPublicSubnet1RouteTable10ACD1E8",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "MyFooVpcPublicSubnet1EIP0E97A53B": Object {
+      "Properties": Object {
+        "Domain": "vpc",
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "my-demo-stack/MyFoo/Vpc/PublicSubnet1",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::EIP",
+    },
+    "MyFooVpcPublicSubnet1NATGateway4BF6B7A0": Object {
+      "Properties": Object {
+        "AllocationId": Object {
+          "Fn::GetAtt": Array [
+            "MyFooVpcPublicSubnet1EIP0E97A53B",
+            "AllocationId",
+          ],
+        },
+        "SubnetId": Object {
+          "Ref": "MyFooVpcPublicSubnet1Subnet5749AF94",
+        },
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "my-demo-stack/MyFoo/Vpc/PublicSubnet1",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::NatGateway",
+    },
+    "MyFooVpcPublicSubnet1RouteTable10ACD1E8": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "my-demo-stack/MyFoo/Vpc/PublicSubnet1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "MyFooVpc546BB456",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "MyFooVpcPublicSubnet1RouteTableAssociation210F6A06": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "MyFooVpcPublicSubnet1RouteTable10ACD1E8",
+        },
+        "SubnetId": Object {
+          "Ref": "MyFooVpcPublicSubnet1Subnet5749AF94",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "MyFooVpcPublicSubnet1Subnet5749AF94": Object {
+      "Properties": Object {
+        "AvailabilityZone": Object {
+          "Fn::Select": Array [
+            0,
+            Object {
+              "Fn::GetAZs": "",
+            },
+          ],
+        },
+        "CidrBlock": "10.0.0.0/18",
+        "MapPublicIpOnLaunch": true,
+        "Tags": Array [
+          Object {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "Name",
+            "Value": "my-demo-stack/MyFoo/Vpc/PublicSubnet1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "MyFooVpc546BB456",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "MyFooVpcPublicSubnet2DefaultRoute6747191B": Object {
+      "DependsOn": Array [
+        "MyFooVpcVPCGWBD2368E6",
+      ],
+      "Properties": Object {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": Object {
+          "Ref": "MyFooVpcIGW155BEA24",
+        },
+        "RouteTableId": Object {
+          "Ref": "MyFooVpcPublicSubnet2RouteTable5F749263",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "MyFooVpcPublicSubnet2RouteTable5F749263": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "my-demo-stack/MyFoo/Vpc/PublicSubnet2",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "MyFooVpc546BB456",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "MyFooVpcPublicSubnet2RouteTableAssociation70D9A454": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "MyFooVpcPublicSubnet2RouteTable5F749263",
+        },
+        "SubnetId": Object {
+          "Ref": "MyFooVpcPublicSubnet2Subnet482188D3",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "MyFooVpcPublicSubnet2Subnet482188D3": Object {
+      "Properties": Object {
+        "AvailabilityZone": Object {
+          "Fn::Select": Array [
+            1,
+            Object {
+              "Fn::GetAZs": "",
+            },
+          ],
+        },
+        "CidrBlock": "10.0.64.0/18",
+        "MapPublicIpOnLaunch": true,
+        "Tags": Array [
+          Object {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "Name",
+            "Value": "my-demo-stack/MyFoo/Vpc/PublicSubnet2",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "MyFooVpc546BB456",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "MyFooVpcVPCGWBD2368E6": Object {
+      "Properties": Object {
+        "InternetGatewayId": Object {
+          "Ref": "MyFooVpcIGW155BEA24",
+        },
+        "VpcId": Object {
+          "Ref": "MyFooVpc546BB456",
+        },
+      },
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+    },
+  },
+}
+`;
