@@ -1,6 +1,6 @@
 # cdk-foo
 
-A demo CDK construct library built with Projen :-)
+A demo CDK construct library built with Projen.
 
 # Sample
 
